@@ -48,8 +48,9 @@ def main():
 
     # create Learner and Trainer
     cross_entropy_error = C.binary_cross_entropy(model, y) # Cross entropy a bit more principled for Learning Rate
+    # squared_error = C.squared_error(model, y)
     learning_rate = 0.010
-    learner = C.sgd(model.parameters, learning_rate)
+    learner = C.sgd(model.parameters, learning_rate) # stochastic gradient descent, adadelta, adam, nesterov
     trainer = C.Trainer(model, (cross_entropy_error), [learner])
     max_iterations = 4000
 
@@ -69,8 +70,8 @@ def main():
             y: labels_matrix[row]})
         
         if i % 1000 == 0 and i > 0:
-            mean_cross_entropy_error = trainer.previous_minibatch_loss_average
-            print(str(i) + ' Cross entropy error on current item = %0.4f ' %mean_cross_entropy_error)
+            mcee = trainer.previous_minibatch_loss_average
+            print(str(i) + ' Cross entropy error on current item = %0.4f ' %mcee)
     
     print('Training complete')
 
