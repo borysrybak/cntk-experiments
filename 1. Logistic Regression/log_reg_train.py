@@ -20,12 +20,12 @@ def main():
 
     features_matrix = np.loadtxt(data_file, dtype=np.float32, delimiter=',',
         skiprows=0, usecols=[0,1])
-    # print(features_matrix)
+    print(features_matrix)
 
     labels_matrix = np.loadtxt(data_file, dtype=np.float32, delimiter=',',
         skiprows=0, usecols=[2], ndmin=2)
-    # print(labels_matrix)
-    # print(labels_matrix.shape)
+    print(labels_matrix)
+    print(labels_matrix.shape)
 
     print('Training data:')
     combined_matrix = np.concatenate((features_matrix, labels_matrix), axis=1)
