@@ -1,0 +1,24 @@
+1. Title: Visceral Fat Rating Reasearch, Athletes Database (2018)
+2. Number of Instances: 505
+3. Number of Attributes: 14 plus the classes attribute
+4. Attribute Information: (class attrubute has been moved to last column)
+
+    #  Attribute                        |   Domain
+    -- -----------------------------------------
+    1. Subject id                       |   (10001 - 10505, id number)
+    2. Sex                              |   (1 for Female, 2 for Male)
+    3. Height                           |   (1.50 - 2.02, in meters)
+    4. Body weight                      |   (42.10 - 110.50, in kilograms)
+    5. Waist circumference              |   (60.50 - 115.00, in centimeters)
+    6. Hip circumference                |   (81.00 - 118.00, in centimeters)
+    7. Arm circumference                |   (21.00 - 39.00, in centimeters)
+    8. Adipose tissue                   |   (5.00 - 37.10, in percents)
+    9. Muscle mass                      |   (35.10 - 81.60, in kilograms)
+    10. Bone mass                       |   (1.80 - 4.20, in kilograms)
+    11. BMI (Body Mass Index)           |   (15.30 - 35.70, [kg / m2])
+    12. DCI (Daily Calorie Intake)      |   (1579.00 - 5076.00, in calories)
+    13. Metabolic age                   |   (12.00 - 67.00, in years)
+    14. Body water                      |   (47.10 - 75.00, in percents)
+    15. Class                           |   (1 - 12, rank of visceral fat rating)
+
+
