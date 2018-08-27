@@ -35,7 +35,8 @@ def plot_each(data_frame):
     ax.set_xlabel('Waist circumference')
     ax.set_ylabel('Body water')
     for name, group in groups:
-        ax.plot(group.x, group.y, marker='o', linestyle='', ms=3, label=name)
+        ci = 'pink' if name == 1 else 'green'
+        ax.plot(group.x, group.y, marker='o', linestyle='', ms=4, label=name, color=ci)
     ax.legend()
     plt.show()
 
