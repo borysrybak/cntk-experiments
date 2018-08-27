@@ -1,5 +1,5 @@
 # breast_cancer_train.py
-# logisitc regression breast-cancer wisconsin data
+# logistic regression breast-cancer wisconsin data
 # CNTK 2.5.1
 
 import numpy as np

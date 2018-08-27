@@ -1,5 +1,5 @@
 # breast_cancer_eval.py
-# logisitc regression breast-cancer wisconsin data
+# logistic regression breast-cancer wisconsin data
 # model evaluation
 
 import numpy as np
