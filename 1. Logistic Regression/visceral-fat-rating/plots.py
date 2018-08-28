@@ -80,12 +80,17 @@ def plot_each(data_frame):
             y = data_frame[str(j + 4)] # (j=i) + 4 = '4'
             plot_each_figure(labels, x, y)
             j += 1
-        i += 1   
+        i += 1
+
+def plot_histogram(data_frame):
+    plt.hist(data_frame['14'], bins = 50, facecolor = 'green', alpha = 0.75)
+    plt.show()
 
 def main():
     df = load_data('.\\visceral-fat-rating.data')
-    plot_scatter_matrix(df)
+    #plot_scatter_matrix(df)
     #plot_each(df)
+    #plot_histogram(df)
 
 
 if __name__ == '__main__':
