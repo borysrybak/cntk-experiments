@@ -6,6 +6,7 @@
 import numpy as np
 import pandas as pd
 import cntk as C
+from sklearn import preprocessing
 
 ### CONSTANT VARIABLES:
 
@@ -55,12 +56,78 @@ def main():
 
     data_matrix = load_data('.\\visceral-fat-rating.data')
     checked_data_matrix = check_for_NaN(data_matrix)
-    sorted_data_matrix = sort_data_by_column(checked_data_matrix, 13)
+    sorted_data_matrix = sort_data_by_column(checked_data_matrix, 0)
     #save_data(sorted_data_matrix, 'sorted_visceral-fat-rating.data')
 
+    # features matrix
+    unnorm_features_matrix = sorted_data_matrix[:, 1:14]
+    features_matrix = preprocessing.normalize(unnorm_features_matrix)
+    print(features_matrix)
+
+    # labels matrix
+    uncoded_labels_matrix = np.reshape(sorted_data_matrix[:, 0], (-1, 1))
+    labels_logic_matrix = uncoded_labels_matrix > 1
+    labels_matrix = labels_logic_matrix.astype(np.float32)
+    
+    print(' Training data:')
+    combined_matrix = np.concatenate((features_matrix, labels_matrix), axis = 1)
+    print(combined_matrix)
+
+    features_dimension = 13
+    labels_dimension = 1
+
+    X = C.input_variable(features_dimension, np.float32)
+    y = C.input_variable(labels_dimension, np.float32)
+
+    W = C.parameter(shape = (features_dimension, 1))
+    b = C.parameter(shape = (labels_dimension))
+
+    z = C.times(X, W) + b
+    p = 1.0 / (1.0 + C.exp(-z))
+
+    model = p   
+
     ###
-    features_matrix = sorted_data_matrix[:, 0:13]
-    labels_matrix = np.reshape(sorted_data_matrix[:, 13], (-1, 1))
+    cee = C.binary_cross_entropy(model, y)
+    learning_rate = 0.01
+    learner = C.sgd(model.parameters, learning_rate)
+
+    ###
+    trainer = C.Trainer(model, (cee), [learner])
+    max_iterations = 5000
+
+    ###
+    np.random.seed(4)
+    N = len(features_matrix)
+
+    for i in range(0, max_iterations):
+        row = np.random.choice(N, 1)
+        trainer.train_minibatch({
+            X: features_matrix[row],
+            y: labels_matrix[row]})
+        
+        if i % 1000 == 0 and i > 0:
+            mcee = trainer.previous_minibatch_loss_average
+            print(str(i) + ' Cross entropy error on current item = %0.4f ' %mcee)
+
+    # print out results - weights and bias
+    np.set_printoptions(precision=4, suppress=True)
+    print('Model weights:')
+    print(W.value)
+    print('Model bias:')
+    print(b.value)
+
+    # save results
+    print('\nSaving files:')
+    weights_file_name = str(learning_rate) + '-' + str(max_iterations) + '_' + 'weights' + '.txt'
+    bias_file_name = str(learning_rate) + '-' + str(max_iterations) + '_' + 'bias' + '.txt'
+
+    print(weights_file_name)
+    print(bias_file_name)
+
+    np.savetxt(weights_file_name, W.value)
+    np.savetxt(bias_file_name, b.value)
+    print('Saving complete')
 
     ##########################
     print('\n ### End training\n')
