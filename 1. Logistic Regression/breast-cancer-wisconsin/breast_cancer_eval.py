@@ -3,6 +3,7 @@
 # model evaluation
 
 import numpy as np
+from sklearn import preprocessing
 
 def loadvaluesfromfile(learning_rate, iteration_number):
 
@@ -38,7 +39,9 @@ def main():
     data_matrix = np.genfromtxt(data_file, dtype=np.float32, delimiter=',', usecols=range(0,10))
     
     # features matrix
-    features_matrix = data_matrix[:, 0:9]
+    unnorm_features_matrix = data_matrix[:, 0:9]
+    min_max_scaler = preprocessing.MinMaxScaler()
+    features_matrix = min_max_scaler.fit_transform(unnorm_features_matrix)
 
     # labels matrix
     unshaped_labels_matrix = data_matrix[:, 9]
@@ -47,8 +50,8 @@ def main():
     # setting weights and bias values
     print('Setting weights and bias values \n')
 
-    learning_rate = 0.001
-    max_iterations = 10000
+    learning_rate = 0.01
+    max_iterations = 5000
     weights, bias = loadvaluesfromfile(learning_rate, max_iterations)
 
     N = len(features_matrix)

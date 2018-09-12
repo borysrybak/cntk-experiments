@@ -6,6 +6,7 @@ import numpy as np
 import cntk as C
 import math
 import pandas as pd
+from sklearn import preprocessing
 
 def main():
     # HEADERS
@@ -30,7 +31,9 @@ def main():
     np.savetxt('sorted-breast-cancer-wisconsin.data', sorted_by_label_data_matrix, delimiter=',', newline='\n')
 
     # features matrix
-    features_matrix = sorted_by_label_data_matrix[:, 0:9]
+    unnorm_features_matrix = sorted_by_label_data_matrix[:, 0:9]
+    min_max_scaler = preprocessing.MinMaxScaler()
+    features_matrix = min_max_scaler.fit_transform(unnorm_features_matrix)
     #print(features_matrix)
 
     # labels matrix - sorted and encoded to 0 or 1
@@ -64,12 +67,12 @@ def main():
 
     # create learner
     cross_entropy_error = C.binary_cross_entropy(model, y)
-    learning_rate = 0.001
+    learning_rate = 0.01
     learner = C.sgd(model.parameters, learning_rate)
 
     # create trainer
     trainer = C.Trainer(model, (cross_entropy_error), [learner])
-    max_iterations = 10000
+    max_iterations = 5000
 
     # train
     print('Start training')
