@@ -62,18 +62,16 @@ def main():
 
     data_matrix = load_data('.\\visceral-fat-rating.data')
     checked_data_matrix = check_for_NaN(data_matrix)
-    sorted_data_matrix = sort_data_by_column(checked_data_matrix, 0)
+    sorted_data_matrix = sort_data_by_column(checked_data_matrix, 13)
     #save_data(sorted_data_matrix, 'sorted_visceral-fat-rating.data')
 
     # features matrix
-    unnorm_features_matrix = sorted_data_matrix[:, 1:14]
+    unnorm_features_matrix = sorted_data_matrix[:, 0:13]
     min_max_scaler = preprocessing.MinMaxScaler()
     features_matrix = min_max_scaler.fit_transform(unnorm_features_matrix)
 
     # labels matrix
-    uncoded_labels_matrix = np.reshape(sorted_data_matrix[:, 0], (-1, 1))
-    labels_logic_matrix = uncoded_labels_matrix > 1
-    labels_matrix = labels_logic_matrix.astype(np.float32)
+    labels_matrix = np.reshape(sorted_data_matrix[:, 13], (-1, 1))
     
     print(' Training data:')
     combined_matrix = np.concatenate((features_matrix, labels_matrix), axis = 1)
@@ -91,14 +89,14 @@ def main():
     model = p   
 
     ###
-    cee = C.binary_cross_entropy(model, y)
+    cee = C.cross_entropy_with_softmax(model, y)
     eval_error = C.classification_error(model, y)
-    learning_rate = 0.01
+    learning_rate = 0.1
     learner = C.sgd(model.parameters, learning_rate)
 
     ###
     trainer = C.Trainer(model, (cee, eval_error), [learner])
-    max_iterations = 5000
+    max_iterations = 8000
 
     ###
     np.random.seed(4)

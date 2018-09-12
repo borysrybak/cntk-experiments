@@ -79,24 +79,22 @@ def main():
     # LOADING DATA
     data_matrix = load_data('.\\visceral-fat-rating.data')
     checked_data_matrix = check_for_NaN(data_matrix)
-    sorted_data_matrix = sort_data_by_column(checked_data_matrix, 0)
+    sorted_data_matrix = sort_data_by_column(checked_data_matrix, 13)
     #save_data(sorted_data_matrix, 'sorted_visceral-fat-rating.data')
 
     # features matrix
-    unnorm_features_matrix = sorted_data_matrix[:, 1:14]
+    unnorm_features_matrix = sorted_data_matrix[:, 0:13]
     min_max_scaler = preprocessing.MinMaxScaler()
     features_matrix = min_max_scaler.fit_transform(unnorm_features_matrix)
 
     # labels matrix
-    uncoded_labels_matrix = np.reshape(sorted_data_matrix[:, 0], (-1, 1))
-    labels_logic_matrix = uncoded_labels_matrix > 1
-    labels_matrix = labels_logic_matrix.astype(np.float32)
+    labels_matrix = np.reshape(sorted_data_matrix[:, 13], (-1, 1))
 
     # setting weights and bias values
     print('Setting weights and bias values \n')
 
-    learning_rate = 0.01
-    max_iterations = 5000
+    learning_rate = 0.1
+    max_iterations = 8000
     weights, bias = loadvaluesfromfile(learning_rate, max_iterations)
 
     N = len(features_matrix)
@@ -111,24 +109,24 @@ def main():
         x = features_matrix[i]
         pred_prob = compute_p(x, weights, bias)
 
-        pred_label = ''
-        if pred_prob < 0.5:
-            pred_label = 0
-        else:
-            pred_label = 1
+        pred_label = 0
+        # if pred_prob < 0.5:
+        #     pred_label = 0
+        # else:
+        #     pred_label = 1
 
         act_label = int(labels_matrix[i])
-
-        pred_str = 'correct' if np.absolute(pred_label - act_label) <= 0 else 'WRONG'
+        pred_str = 0
+        # pred_str = 'correct' if np.absolute(pred_label - act_label) <= 0 else 'WRONG'
         
-        if act_label == 1 & act_label == pred_label:
-            true_positives += 1
-        if act_label == 1 & act_label != pred_label:
-            false_negatives += 1
-        if act_label == 0 & act_label == pred_label:
-            true_negatives += 1
-        if act_label == 0 & act_label != pred_label:
-            false_positives += 1
+        # if act_label == 1 & act_label == pred_label:
+        #     true_positives += 1
+        # if act_label == 1 & act_label != pred_label:
+        #     false_negatives += 1
+        # if act_label == 0 & act_label == pred_label:
+        #     true_negatives += 1
+        # if act_label == 0 & act_label != pred_label:
+        #     false_positives += 1
         
         print('%2d\t%0.4f\t\t%0.0f\t\t%0.0f\t\t%s' %(i, pred_prob, pred_label, act_label, pred_str))
 
