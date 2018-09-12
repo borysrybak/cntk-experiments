@@ -52,6 +52,12 @@ def sort_data_by_column(data_matrix, column):
 def save_data(data_matrix, new_file_name):
     np.savetxt(new_file_name, data_matrix, delimiter=',', newline='\n')
 
+def linear_layer(X, features_dimension, labels_dimension):
+    W = C.parameter(shape = (features_dimension, 1))
+    b = C.parameter(shape = (labels_dimension))
+
+    return C.times(X, W) + b, W, b
+
 def main():
 
     data_matrix = load_data('.\\visceral-fat-rating.data')
@@ -61,8 +67,8 @@ def main():
 
     # features matrix
     unnorm_features_matrix = sorted_data_matrix[:, 1:14]
-    features_matrix = preprocessing.normalize(unnorm_features_matrix)
-    print(features_matrix)
+    min_max_scaler = preprocessing.MinMaxScaler()
+    features_matrix = min_max_scaler.fit_transform(unnorm_features_matrix)
 
     # labels matrix
     uncoded_labels_matrix = np.reshape(sorted_data_matrix[:, 0], (-1, 1))
@@ -79,21 +85,19 @@ def main():
     X = C.input_variable(features_dimension, np.float32)
     y = C.input_variable(labels_dimension, np.float32)
 
-    W = C.parameter(shape = (features_dimension, 1))
-    b = C.parameter(shape = (labels_dimension))
-
-    z = C.times(X, W) + b
+    z, W, b = linear_layer(X, features_dimension, labels_dimension)
     p = 1.0 / (1.0 + C.exp(-z))
 
     model = p   
 
     ###
     cee = C.binary_cross_entropy(model, y)
+    eval_error = C.classification_error(model, y)
     learning_rate = 0.01
     learner = C.sgd(model.parameters, learning_rate)
 
     ###
-    trainer = C.Trainer(model, (cee), [learner])
+    trainer = C.Trainer(model, (cee, eval_error), [learner])
     max_iterations = 5000
 
     ###

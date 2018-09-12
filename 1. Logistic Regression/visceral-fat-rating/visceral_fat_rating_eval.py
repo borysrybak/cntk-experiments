@@ -6,6 +6,7 @@
 import numpy as np
 import pandas as pd
 import cntk as C
+from sklearn import preprocessing
 
 ### CONSTANT VARIABLES:
 
@@ -83,7 +84,8 @@ def main():
 
     # features matrix
     unnorm_features_matrix = sorted_data_matrix[:, 1:14]
-    features_matrix = unnorm_features_matrix / np.linalg.norm(unnorm_features_matrix)
+    min_max_scaler = preprocessing.MinMaxScaler()
+    features_matrix = min_max_scaler.fit_transform(unnorm_features_matrix)
 
     # labels matrix
     uncoded_labels_matrix = np.reshape(sorted_data_matrix[:, 0], (-1, 1))
@@ -110,7 +112,7 @@ def main():
         pred_prob = compute_p(x, weights, bias)
 
         pred_label = ''
-        if pred_prob < 0.6005:
+        if pred_prob < 0.5:
             pred_label = 0
         else:
             pred_label = 1
