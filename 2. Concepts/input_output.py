@@ -12,8 +12,8 @@ import cntk as C
 
 ### FUNCTION DEFINITIONS:
 def print_out_CNTK_version():
-    ver = C.__version__
-    print(' ### (Using CNTK version ' + str(ver) + ')')
+    version = C.__version__
+    print(' ### (Using CNTK version ' + str(version) + ')')
 
 def headers():
     print('\n ### Begin neural network input-output demo')
