@@ -22,17 +22,17 @@ def headers():
 def main():
     np.set_printoptions(precision = 4, suppress = True, formatter = {'float': '{: 0.2f}'.format})
 
-    input_node_dim = 4
-    hidden_node_dim = 2
-    output_node_dim = 3
+    input_node_dimension = 4
+    hidden_node_dimension = 2
+    output_node_dimension = 3
 
-    X = C.input_variable(input_node_dim, np.float32)
-    Y = C.input_variable(output_node_dim, np.float32)
+    X = C.input_variable(input_node_dimension, np.float32)
+    Y = C.input_variable(output_node_dimension, np.float32)
 
     print('\nCreating a 4-2-3 tanh-softmax neural network')
-    hidden_layer = C.layers.Dense(hidden_node_dim, activation = C.tanh, name = 'hidLayer')(X)
-    output_layer = C.layers.Dense(output_node_dim, activation = C.softmax, name = 'outLayer')(hidden_layer)
-    neural_network = output_layer # or neural_network = C.ops.alias(output_layer) 
+    hidden_layer = C.layers.Dense(hidden_node_dimension, activation = C.tanh, name = 'HiddenLayer')(X)
+    output_layer = C.layers.Dense(output_node_dimension, activation = C.softmax, name = 'OutputLayer')(hidden_layer)
+    neural_network = output_layer # or neural_network = C.ops.alias(layer)
 
     print('\nSetting weights and bias values')
     input_to_hidden_weights = np.array([[0.01, 0.02],
@@ -47,26 +47,27 @@ def main():
 
     output_biases = np.array([0.17, 0.18, 0.19], dtype = np.float32)
 
-    hidden_layer.hidLayer.W.value = input_to_hidden_weights
-    hidden_layer.hidLayer.b.value = hidden_biases
-    output_layer.outLayer.W.value = hidden_to_output_weights
-    output_layer.outLayer.b.value = output_biases
+    hidden_layer.HiddenLayer.W.value = input_to_hidden_weights
+    hidden_layer.HiddenLayer.b.value = hidden_biases
+    output_layer.OutputLayer.W.value = hidden_to_output_weights
+    output_layer.OutputLayer.b.value = output_biases
 
     print('\nSet the input-hidden weights to: ')
-    print(hidden_layer.hidLayer.W.value)
+    print(hidden_layer.HiddenLayer.W.value)
     print('Set the hidden node biases to: ')
-    print(hidden_layer.hidLayer.b.value)
+    print(hidden_layer.HiddenLayer.b.value)
     print('Set the hidden-output weights to: ')
-    print(output_layer.outLayer.W.value)
+    print(output_layer.OutputLayer.W.value)
     print('Set the output node biases to: ')
-    print(output_layer.outLayer.b.value)
+    print(output_layer.OutputLayer.b.value)
 
-    print('\nSetting input values to (1.0, 2.0, 3.0, 4.0)')
+    print('\nSetting input values to: ')
     input_values = np.array([1.0, 2.0, 3.0, 4.0], dtype = np.float32)
+    print(input_values)
 
     np.set_printoptions(formatter = {'float': '{: 0.4f}'.format})
     print('\nFeeding input values to hidden layer only ')
-    hidden_values = hidden_layer.eval({X: input_values})
+    hidden_values = hidden_layer.eval({X: input_values}) # or just hidden_layer.eval(input_values)
     print('Hidden node values:')
     print(hidden_values)
 
